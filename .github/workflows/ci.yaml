@@ -4,6 +4,7 @@ on: push
 jobs:
   build-cln:
     name: Build all CLN variants
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: true
       matrix:
