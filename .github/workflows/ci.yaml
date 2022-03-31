@@ -3,7 +3,7 @@ name: Continuous Integration
 on: push
 jobs:
   build-cln:
-    name: Build all CLN variants
+    name: Build all CLN variants (DEV={{ matrix.DEVELOPER}}, EXP={{ matrix.EXPERIMENTAL_FEATURES }}, COMPAT={{ matrix.COMPAT }}
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: true
@@ -43,3 +43,37 @@ jobs:
         run: |
           bash -x .github/scripts/build.sh
           make install PREFIX=build/dev${DEVELOPER}/compat${COMPAT}/exp${EXPERIMENTAL_FEATURES}
+    - name: Cache CLN
+      uses: actions/cache@v2
+      with:
+        path: build/dev${DEVELOPER}/compat${COMPAT}/exp${EXPERIMENTAL_FEATURES}
+        key: cln-build-dev${{DEVELOPER}}-compat${{COMPAT}}-exp${{EXPERIMENTAL_FEATURES}}
+  build-cln:
+    name: Build all CLN variants (DEV={{ matrix.DEVELOPER}}, EXP={{ matrix.EXPERIMENTAL_FEATURES }}, COMPAT={{ matrix.COMPAT }}
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - DEVELOPER: 1
+            EXPERIMENTAL_FEATURES: 1
+            COMPAT: 1
+          - DEVELOPER: 0
+            EXPERIMENTAL_FEATURES: 1
+            COMPAT: 1
+          - DEVELOPER: 0
+            EXPERIMENTAL_FEATURES: 0
+            COMPAT: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.0.0
+
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+    - name: Cache CLN
+      uses: actions/cache@v2
+      with:
+        path: build/dev${DEVELOPER}/compat${COMPAT}/exp${EXPERIMENTAL_FEATURES}
+        key: cln-build-dev${{DEVELOPER}}-compat${{COMPAT}}-exp${{EXPERIMENTAL_FEATURES}}
