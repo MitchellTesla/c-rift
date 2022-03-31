@@ -50,6 +50,7 @@ jobs:
           key: cln-build-dev${{matrix.DEVELOPER}}-compat${{matrix.COMPAT}}-exp${{matrix.EXPERIMENTAL_FEATURES}}
   test:
     name: Run tests against pre-built CLNs
+    needs: build-cln
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: true
